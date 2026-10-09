@@ -1,0 +1,845 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   style.css — Focus Board
+   Dark glassmorphism UI with vibrant violet/cyan accent palette.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── 1. Design Tokens ─────────────────────────────────────────────────────── */
+:root {
+    /* Colors */
+    --bg-deep:        #07051a;
+    --bg-mid:         #0f0a28;
+    --bg-surface:     #160e35;
+
+    --accent-primary: #7c3aed;       /* violet */
+    --accent-secondary: #06b6d4;     /* cyan */
+    --accent-glow:    rgba(124, 58, 237, 0.35);
+    --accent-glow-cyan: rgba(6, 182, 212, 0.2);
+
+    --glass-bg:       rgba(255, 255, 255, 0.04);
+    --glass-border:   rgba(255, 255, 255, 0.09);
+    --glass-hover:    rgba(255, 255, 255, 0.07);
+
+    --text-primary:   #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted:     #475569;
+
+    --success:        #10b981;
+    --success-glow:   rgba(16, 185, 129, 0.3);
+    --danger:         #ef4444;
+    --danger-hover:   rgba(239, 68, 68, 0.15);
+
+    /* Typography */
+    --font:           'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Spacing */
+    --radius-sm:      8px;
+    --radius-md:      14px;
+    --radius-lg:      20px;
+    --radius-xl:      28px;
+
+    /* Shadows */
+    --shadow-card:    0 8px 32px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255,255,255,0.06) inset;
+    --shadow-glow:    0 0 30px var(--accent-glow);
+    --shadow-btn:     0 4px 20px rgba(124, 58, 237, 0.45);
+
+    /* Transitions */
+    --ease:           cubic-bezier(0.16, 1, 0.3, 1);
+    --t-fast:         0.18s;
+    --t-med:          0.32s;
+    --t-slow:         0.5s;
+}
+
+/* ── 2. Reset & Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font);
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── 3. Ambient Background Orbs ───────────────────────────────────────────── */
+.bg-orbs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.18;
+    animation: orbFloat 12s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+    width: 560px; height: 560px;
+    background: var(--accent-primary);
+    top: -160px; left: -120px;
+    animation-duration: 14s;
+}
+.orb-2 {
+    width: 420px; height: 420px;
+    background: var(--accent-secondary);
+    bottom: -80px; right: -80px;
+    animation-duration: 11s;
+    animation-delay: -4s;
+}
+.orb-3 {
+    width: 300px; height: 300px;
+    background: #ec4899;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation-duration: 18s;
+    animation-delay: -8s;
+    opacity: 0.1;
+}
+
+@keyframes orbFloat {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(30px, 20px) scale(1.08); }
+}
+
+/* ── 4. App Wrapper ───────────────────────────────────────────────────────── */
+.app-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 24px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── 5. Glass Card Base ───────────────────────────────────────────────────── */
+.glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--t-med) var(--ease),
+                box-shadow var(--t-med) var(--ease);
+}
+.glass-card:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: var(--shadow-card), 0 0 60px rgba(124, 58, 237, 0.1);
+}
+
+/* ── 6. Header ────────────────────────────────────────────────────────────── */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon-wrap {
+    font-size: 28px;
+    line-height: 1;
+    filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.8));
+    animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.6)); }
+    50%       { filter: drop-shadow(0 0 18px rgba(124, 58, 237, 1)); }
+}
+
+.logo-text {
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.logo-text .accent {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.current-date {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    padding-left: 2px;
+}
+
+.header-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    backdrop-filter: blur(12px);
+}
+
+/* ── 7. Stats Row ─────────────────────────────────────────────────────────── */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 14px;
+    position: relative;
+}
+
+.stat-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    backdrop-filter: blur(16px);
+    transition: transform var(--t-fast) var(--ease),
+                border-color var(--t-fast),
+                box-shadow var(--t-fast);
+    cursor: default;
+}
+.stat-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(124, 58, 237, 0.4);
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.18);
+}
+
+.stat-icon {
+    font-size: 1.7rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.stat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, #fff 30%, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Progress Bar */
+.progress-bar-wrap {
+    grid-column: 1 / -1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    transition: width 0.7s var(--ease), background 0.4s;
+    position: relative;
+}
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    animation: shimmer 2.2s infinite;
+}
+.progress-fill.half {
+    background: linear-gradient(90deg, var(--accent-primary), #f59e0b);
+}
+.progress-fill.full {
+    background: linear-gradient(90deg, var(--success), #34d399);
+}
+
+@keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(400%); }
+}
+
+/* ── 8. Main Content Grid ─────────────────────────────────────────────────── */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 22px;
+    align-items: start;
+}
+
+/* ── 9. Panel Header ──────────────────────────────────────────────────────── */
+.panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.panel-header h1,
+.panel-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.panel-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-weight: 400;
+}
+
+.panel-tip {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+kbd {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: var(--font);
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+/* ── 10. Habits Panel ─────────────────────────────────────────────────────── */
+.habits-panel {
+    padding: 28px 28px 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Add Habit Form */
+.add-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: color var(--t-fast);
+}
+
+#habitInput {
+    width: 100%;
+    padding: 13px 16px 13px 42px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    font-weight: 400;
+    outline: none;
+    transition: border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
+    caret-color: var(--accent-primary);
+}
+#habitInput::placeholder {
+    color: var(--text-muted);
+}
+#habitInput:focus {
+    border-color: var(--accent-primary);
+    background: rgba(124, 58, 237, 0.08);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+#habitInput:focus + .input-icon,
+.input-wrapper:focus-within .input-icon {
+    color: var(--accent-primary);
+}
+
+.add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 22px;
+    background: linear-gradient(135deg, var(--accent-primary), #6d28d9);
+    border: none;
+    border-radius: var(--radius-md);
+    color: #fff;
+    font-family: var(--font);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform var(--t-fast) var(--ease),
+                box-shadow var(--t-fast),
+                opacity var(--t-fast);
+    white-space: nowrap;
+    box-shadow: var(--shadow-btn);
+}
+.add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(124, 58, 237, 0.6);
+}
+.add-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-btn);
+}
+
+.btn-icon {
+    font-size: 1rem;
+    transition: transform var(--t-fast) var(--ease);
+}
+.add-btn:hover .btn-icon {
+    transform: translateX(3px);
+}
+
+/* ── 11. Habit List ───────────────────────────────────────────────────────── */
+.habit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ── 12. Habit Card ───────────────────────────────────────────────────────── */
+.habit-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    transition: transform var(--t-fast) var(--ease),
+                border-color var(--t-fast),
+                background var(--t-fast),
+                box-shadow var(--t-fast);
+    animation: slideIn var(--t-med) var(--ease) both;
+    cursor: default;
+}
+.habit-card:hover {
+    transform: translateX(4px);
+    border-color: rgba(124, 58, 237, 0.3);
+    background: rgba(124, 58, 237, 0.06);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.12);
+}
+.habit-card.completed {
+    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.05);
+}
+.habit-card.completed:hover {
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+}
+
+.habit-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.habit-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* Check Button */
+.check-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color var(--t-fast),
+                background var(--t-fast),
+                transform var(--t-fast) var(--ease),
+                box-shadow var(--t-fast);
+    color: transparent;
+}
+.check-btn:hover {
+    border-color: var(--success);
+    background: rgba(16, 185, 129, 0.1);
+    transform: scale(1.1);
+}
+.check-btn.checked {
+    background: linear-gradient(135deg, var(--success), #34d399);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 0 16px var(--success-glow);
+}
+.check-btn.checked:hover {
+    background: linear-gradient(135deg, #059669, var(--success));
+    transform: scale(1.05);
+}
+
+.check-icon {
+    width: 15px;
+    height: 15px;
+}
+
+.habit-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.habit-name {
+    font-size: 0.93rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color var(--t-fast);
+}
+.habit-card.completed .habit-name {
+    color: #94a3b8;
+    text-decoration: line-through;
+    text-decoration-color: rgba(148, 163, 184, 0.4);
+}
+
+.habit-status {
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+.habit-status.done {
+    color: var(--success);
+}
+.habit-status.pending {
+    color: var(--text-muted);
+}
+
+/* Streak Badge */
+.streak-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    background: rgba(124, 58, 237, 0.12);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    border-radius: 50px;
+    cursor: default;
+    transition: background var(--t-fast);
+}
+.streak-badge:hover {
+    background: rgba(124, 58, 237, 0.2);
+}
+
+.streak-fire { font-size: 0.85rem; line-height: 1; }
+.streak-count {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #a78bfa;
+    line-height: 1;
+}
+.streak-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+/* Delete Button */
+.delete-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: color var(--t-fast),
+                background var(--t-fast),
+                border-color var(--t-fast),
+                transform var(--t-fast) var(--ease);
+}
+.delete-btn svg { width: 14px; height: 14px; }
+.delete-btn:hover {
+    color: var(--danger);
+    background: var(--danger-hover);
+    border-color: rgba(239, 68, 68, 0.3);
+    transform: scale(1.1);
+}
+
+/* ── 13. Empty State ──────────────────────────────────────────────────────── */
+.empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 48px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 3.5rem;
+    line-height: 1;
+    animation: floatIcon 3s ease-in-out infinite;
+    filter: drop-shadow(0 8px 20px rgba(124, 58, 237, 0.4));
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-10px); }
+}
+
+.empty-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.empty-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    max-width: 260px;
+    line-height: 1.5;
+}
+
+/* ── 14. Chart Panel ──────────────────────────────────────────────────────── */
+.chart-panel {
+    padding: 28px 24px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    flex-shrink: 0;
+}
+
+.chart-container {
+    flex: 1;
+    min-height: 260px;
+    max-height: 300px;
+    position: relative;
+}
+
+.chart-footer {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.chart-tip {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ── 15. Footer ───────────────────────────────────────────────────────────── */
+.app-footer {
+    text-align: center;
+    padding-top: 4px;
+}
+.app-footer p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.footer-sep { opacity: 0.4; }
+
+/* ── 16. Animations ───────────────────────────────────────────────────────── */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    to {
+        opacity: 0;
+        transform: translateX(-24px) scale(0.95);
+        max-height: 0;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.slide-out {
+    animation: slideOut var(--t-med) var(--ease) forwards;
+    overflow: hidden;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-8px); }
+    40%       { transform: translateX(8px); }
+    60%       { transform: translateX(-5px); }
+    80%       { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.4s ease;
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+@keyframes popAnim {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.25); }
+    70%  { transform: scale(0.92); }
+    100% { transform: scale(1); }
+}
+
+.pop { animation: popAnim 0.35s var(--ease); }
+
+/* ── 17. Scrollbar ────────────────────────────────────────────────────────── */
+.habit-list::-webkit-scrollbar { width: 4px; }
+.habit-list::-webkit-scrollbar-track { background: transparent; }
+.habit-list::-webkit-scrollbar-thumb {
+    background: rgba(124, 58, 237, 0.4);
+    border-radius: 4px;
+}
+
+/* ── 18. Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    .chart-panel {
+        order: -1; /* chart above habits on mobile */
+    }
+}
+
+@media (max-width: 640px) {
+    .app-wrapper { padding: 18px 14px 36px; }
+
+    .logo-text { font-size: 1.5rem; }
+    .logo-icon-wrap { font-size: 22px; }
+    .current-date { font-size: 0.75rem; }
+    .header-badge { display: none; }
+
+    .stats-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    .stat-card { padding: 14px 12px; gap: 8px; }
+    .stat-icon { font-size: 1.3rem; }
+    .stat-value { font-size: 1.35rem; }
+    .stat-label { font-size: 0.65rem; }
+
+    .habits-panel,
+    .chart-panel { padding: 20px 16px 18px; border-radius: var(--radius-lg); }
+
+    .add-form { flex-direction: column; }
+    .add-btn { justify-content: center; }
+
+    .panel-tip { display: none; }
+
+    .streak-badge { padding: 4px 8px; }
+    .streak-count { font-size: 0.78rem; }
+}
+
+@media (max-width: 400px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    #statCardPct { display: none; }
+}
+
+/* ── 19. Focus Styles (Accessibility) ────────────────────────────────────── */
+:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+/* ── 20. Selection Color ──────────────────────────────────────────────────── */
+::selection {
+    background: rgba(124, 58, 237, 0.35);
+    color: #fff;
+}
